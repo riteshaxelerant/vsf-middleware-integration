@@ -2,15 +2,15 @@
   <div class="testimonials-section">
     <div class="container">
       <SfHeading
-        v-if="data.title"
+        v-if="data.sectionTitle"
         :level="2"
-        :title="data.title"
+        :title="data.sectionTitle"
         class="section-heading"
       />
       
-      <div v-if="data.testimonials && data.testimonials.length" class="testimonials-grid">
+      <div v-if="data.items && data.items.length" class="testimonials-grid">
         <div
-          v-for="testimonial in data.testimonials"
+          v-for="testimonial in data.items"
           :key="testimonial.id"
           class="testimonial-card"
         >
@@ -23,16 +23,16 @@
             <p class="testimonial-message">{{ testimonial.quote }}</p>
             <div class="testimonial-author">
               <SfImage
-                v-if="testimonial.avatar && testimonial.avatar.url"
-                :src="getStrapiImageUrl(testimonial.avatar.url)"
-                :alt="testimonial.name"
+                v-if="testimonial.authorImage && testimonial.authorImage.url"
+                :src="getStrapiImageUrl(testimonial.authorImage.url)"
+                :alt="testimonial.authorName"
                 class="author-avatar"
                 width="48"
                 height="48"
               />
               <div class="author-info">
-                <h4 class="author-name">{{ testimonial.name }}</h4>
-                <p v-if="testimonial.email" class="author-email">{{ testimonial.email }}</p>
+                <h4 class="author-name">{{ testimonial.authorName }}</h4>
+                <p v-if="testimonial.authorTitle" class="author-title">{{ testimonial.authorTitle }}</p>
               </div>
             </div>
           </div>
@@ -151,7 +151,7 @@ export default {
   color: var(--c-text);
 }
 
-.author-email {
+.author-title {
   font-size: var(--font-size--sm);
   color: var(--c-text-muted);
   margin: 0;

@@ -112,6 +112,31 @@ query GetPage($slug: String!) {
         id
         content
       }
+      ... on ComponentSectionsProductSlider {
+        id
+        slides {
+          image {
+            caption
+            alternativeText
+            url
+          }
+          link
+          name
+        }
+        title
+      }
+      ... on ComponentSharedCategoryCard {
+        description
+        id
+        image {
+          caption
+          alternativeText
+          name
+          url
+        }
+        link
+        name
+      }
     }
   }
 } 

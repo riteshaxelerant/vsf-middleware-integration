@@ -2,9 +2,9 @@
   <div class="feature-grid-section">
     <div class="container">
       <SfHeading
-        v-if="data.title"
+        v-if="data.sectionTitle"
         :level="2"
-        :title="data.title"
+        :title="data.sectionTitle"
         class="section-heading"
       />
       
@@ -14,25 +14,17 @@
           :key="feature.id"
           class="feature-card"
         >
-          <div class="feature-icon" v-if="getFeatureIcon(feature)">
+          <div class="feature-icon">
             <SfImage
-              :src="getFeatureIcon(feature)"
+              v-if="feature.icon && feature.icon.url"
+              :src="getStrapiImageUrl(feature.icon.url)"
               :alt="feature.title"
-              :width="64"
-              :height="64"
-              class="icon-image"
+              width="64"
+              height="64"
             />
           </div>
-          
-          <SfHeading
-            :level="3"
-            :title="feature.title"
-            class="feature-title"
-          />
-          
-          <p v-if="feature.description" class="feature-description">
-            {{ feature.description }}
-          </p>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-description">{{ feature.description }}</p>
         </div>
       </div>
     </div>
@@ -55,10 +47,6 @@ export default {
     },
   },
   methods: {
-    getFeatureIcon(feature) {
-      if (!feature.icon || !feature.icon.url) return '';
-      return this.getStrapiImageUrl(feature.icon.url);
-    },
     getStrapiImageUrl(url) {
       if (url.startsWith('http')) return url;
       return `${process.env.VSF_STRAPI_API_URL || 'http://localhost:1337'}${url}`;
@@ -100,40 +88,34 @@ export default {
 .feature-card {
   text-align: center;
   padding: var(--spacer-lg);
-  border-radius: var(--border-radius);
   background: var(--c-white);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
   
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   }
 }
 
 .feature-icon {
   margin-bottom: var(--spacer-base);
-  display: flex;
-  justify-content: center;
-}
-
-.icon-image {
-  border-radius: var(--border-radius);
-  object-fit: contain;
-}
-
-.feature-title {
-  margin-bottom: var(--spacer-base);
   
-  ::v-deep .sf-heading__title {
-    font-size: var(--font-size--lg);
-    font-weight: var(--font-weight--semibold);
+  img {
+    border-radius: var(--border-radius);
   }
 }
 
+.feature-title {
+  font-size: var(--font-size--lg);
+  font-weight: var(--font-weight--semibold);
+  margin-bottom: var(--spacer-sm);
+  color: var(--c-text);
+}
+
 .feature-description {
-  color: var(--c-text-muted);
   line-height: 1.6;
+  color: var(--c-text-muted);
   margin: 0;
 }
 </style> 

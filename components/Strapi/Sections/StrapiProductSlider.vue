@@ -8,21 +8,50 @@
         class="section-heading"
       />
       
-      <div class="placeholder-content">
-        <p>Product Slider Component - Ready for Magento product integration</p>
-        <p>This component will display products from your Magento catalog.</p>
+      <SfCarousel
+        v-if="data.slides && data.slides.length"
+        class="product-carousel"
+        :settings="{
+          type: 'carousel',
+          perView: 4,
+          breakpoints: {
+            1023: { perView: 2 },
+            767: { perView: 1 }
+          }
+        }"
+      >
+        <SfCarouselItem v-for="(slide, i) in data.slides" :key="i">
+          <div class="product-card">
+            <nuxt-link :to="slide.link">
+              <SfImage
+                :src="slide.image.url"
+                :alt="slide.image.alternativeText"
+                :width="200"
+                :height="200"
+                class="product-image"
+              />
+              <h3 class="product-name">{{ slide.name }}</h3>
+            </nuxt-link>
+          </div>
+        </SfCarouselItem>
+      </SfCarousel>
+
+      <div v-else class="placeholder-content">
+        <p>No products to display in this slider.</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { SfHeading } from '@storefront-ui/vue';
+import { SfHeading, SfCarousel, SfImage } from '@storefront-ui/vue';
 
 export default {
   name: 'StrapiProductSlider',
   components: {
     SfHeading,
+    SfCarousel,
+    SfImage,
   },
   props: {
     data: {
@@ -47,6 +76,33 @@ export default {
 .section-heading {
   text-align: center;
   margin-bottom: var(--spacer-xl);
+}
+
+.product-carousel {
+  margin: 0 - var(--spacer-sm);
+  --carousel-item-padding: var(--spacer-sm);
+}
+
+.product-card {
+  text-align: center;
+}
+
+.product-image {
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacer-sm);
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.product-name {
+  font-family: var(--font-family--secondary);
+  font-weight: var(--font-weight--normal);
+  font-size: var(--font-size--base);
+  color: var(--c-text);
+  margin: 0;
 }
 
 .placeholder-content {

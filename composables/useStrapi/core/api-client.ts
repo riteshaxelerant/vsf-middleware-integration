@@ -20,7 +20,6 @@ const client = axios.create({
 const makeRequest = (endpoint, params = {}) => {
   const paramString = new URLSearchParams({ endpoint, ...params }).toString();
   // We need to use /api/strapi, which is the endpoint registered in nuxt.config.js
-  console.log("Hello request", `/api/strapi?${paramString}`);
   return client.get(`/api/strapi?${paramString}`).then(res => res.data);
 };
 

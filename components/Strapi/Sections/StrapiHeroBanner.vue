@@ -2,7 +2,7 @@
   <SfHero class="hero">
     <SfHeroItem
       :style="heroStyle"
-      :title="data.title"
+      :title="data.herotitle"
       :subtitle="data.subtitle"
       :button-text="data.buttonText"
       :background="backgroundImage"

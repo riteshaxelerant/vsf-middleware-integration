@@ -2,61 +2,61 @@
   <div class="strapi-content-section">
     <!-- Hero Banner -->
     <StrapiHeroBanner 
-      v-if="component.__typename === 'ComponentSectionHeroBanner'" 
+      v-if="component.__typename === 'ComponentSectionsHeroBanner'" 
       :data="component" 
     />
     
     <!-- Product Slider -->
     <StrapiProductSlider 
-      v-else-if="component.__typename === 'ComponentSectionProductSlider'" 
+      v-else-if="component.__typename === 'ComponentSectionsProductSlider'" 
       :data="component" 
     />
     
     <!-- Testimonials -->
     <StrapiTestimonials 
-      v-else-if="component.__typename === 'ComponentSectionTestimonials'" 
+      v-else-if="component.__typename === 'ComponentSectionsTestimonials'" 
       :data="component" 
     />
     
     <!-- FAQ Section -->
     <StrapiFaqSection 
-      v-else-if="component.__typename === 'ComponentSectionFaqSection'" 
+      v-else-if="component.__typename === 'ComponentSectionsFaqSection'" 
       :data="component" 
     />
     
     <!-- Blog Posts Teaser -->
     <StrapiBlogPostsTeaser 
-      v-else-if="component.__typename === 'ComponentSectionBlogPostsTeaser'" 
+      v-else-if="component.__typename === 'ComponentSectionsBlogPostsTeaser'" 
       :data="component" 
     />
     
     <!-- Rich Text Block -->
     <StrapiRichTextBlock 
-      v-else-if="component.__typename === 'ComponentSectionRichTextBlock'" 
+      v-else-if="component.__typename === 'ComponentSectionsRichTextBlock'" 
       :data="component" 
     />
     
     <!-- Promotional CTA -->
     <StrapiPromotionalCta 
-      v-else-if="component.__typename === 'ComponentSectionPromotionalCta'" 
+      v-else-if="component.__typename === 'ComponentSectionsPromotionalCta'" 
       :data="component" 
     />
     
     <!-- Category Highlight -->
     <StrapiCategoryHighlight 
-      v-else-if="component.__typename === 'ComponentSectionCategoryHighlight'" 
+      v-else-if="component.__typename === 'ComponentSectionsCategoryHighlight'" 
       :data="component" 
     />
     
     <!-- Image Carousel -->
     <StrapiImageCarousel 
-      v-else-if="component.__typename === 'ComponentSectionImageCarousel'" 
+      v-else-if="component.__typename === 'ComponentSectionsImageCarousel'" 
       :data="component" 
     />
     
     <!-- Feature Grid -->
     <StrapiFeatureGrid 
-      v-else-if="component.__typename === 'ComponentSectionFeatureGrid'" 
+      v-else-if="component.__typename === 'ComponentSectionsFeatureGrid'" 
       :data="component" 
     />
     

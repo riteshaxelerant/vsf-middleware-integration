@@ -4,15 +4,11 @@ import { StrapiApiResponse, StrapiData } from '../core/types';
 import { strapiApiClient } from '../core/api-client';
 
 const extractPageData = (response: StrapiApiResponse<StrapiPage>) => {
+  // For a single page, the data is the first item in the array.
   if (Array.isArray(response.data)) {
-    return response.data.map(d => ({ id: d.id, ...d.attributes }));
+    return response.data.length > 0 ? response.data[0] : null;
   }
-  if (response.data) {
-     // For fetching a single entry by slug, Strapi returns an array with one item.
-    const singleItem = Array.isArray(response.data) ? response.data[0] : response.data;
-    return singleItem ? { id: singleItem.id, ...singleItem.attributes } : null;
-  }
-  return null;
+  return response.data || null;
 };
 
 export const useStrapiPages = () => {
@@ -25,14 +21,16 @@ export const useStrapiPages = () => {
     loading.value = true;
     error.value = null;
     try {
-      const endpoint = params.slug ? 'getPage' : 'getPages';
+      const isSingle = !!params.slug;
+      const endpoint = isSingle ? 'getPage' : 'getPages';
       const result = await strapiApiClient[endpoint](params);
-      const extractedData = extractPageData(result);
-
-      if (params.slug) {
-        page.value = extractedData as StrapiPage;
+      
+      if (isSingle) {
+        const extractedData = extractPageData(result);
+        page.value = extractedData as unknown as StrapiPage;
       } else {
-        pages.value = extractedData as StrapiPage[];
+        // For collections, the response data is the array itself.
+        pages.value = (result.data || []) as unknown as StrapiPage[];
       }
 
     } catch (e) {

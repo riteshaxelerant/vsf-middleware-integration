@@ -1,53 +1,38 @@
 <template>
-  <div class="blog-posts-teaser">
+  <div class="blog-posts-section">
     <div class="container">
       <SfHeading
-        v-if="data.title"
+        v-if="data.sectionTitle"
         :level="2"
-        :title="data.title"
+        :title="data.sectionTitle"
         class="section-heading"
       />
       
-      <div v-if="data.articles && data.articles.length" class="articles-grid">
+      <div v-if="data.posts && data.posts.length" class="posts-grid">
         <article
-          v-for="article in data.articles"
-          :key="article.id"
-          class="article-card"
-          @click="navigateToArticle(article.slug)"
+          v-for="post in data.posts"
+          :key="post.id"
+          class="post-card"
         >
-          <div v-if="article.cover" class="article-image">
+          <div class="post-image">
             <SfImage
-              :src="getStrapiImageUrl(article.cover.url)"
-              :alt="article.cover.alternativeText || article.title"
-              :width="400"
-              :height="250"
-              class="cover-image"
+              v-if="post.image && post.image.url"
+              :src="getStrapiImageUrl(post.image.url)"
+              :alt="post.image.alternativeText || post.title"
+              width="300"
+              height="200"
+              class="post-thumbnail"
             />
           </div>
           
-          <div class="article-content">
-            <SfHeading
-              :level="3"
-              :title="article.title"
-              class="article-title"
-            />
-            
-            <p v-if="article.description" class="article-description">
-              {{ article.description }}
-            </p>
-            
-            <div class="article-meta">
-              <span v-if="article.author" class="author">
-                By {{ article.author.name }}
-              </span>
-              <span v-if="article.publishedAt" class="date">
-                {{ formatDate(article.publishedAt) }}
-              </span>
-            </div>
+          <div class="post-content">
+            <h3 class="post-title">{{ post.title }}</h3>
+            <p v-if="post.summary" class="post-excerpt">{{ post.summary }}</p>
             
             <SfButton
-              class="sf-button--text read-more-btn"
-              @click.stop="navigateToArticle(article.slug)"
+              v-if="post.link"
+              class="post-link"
+              @click="handlePostClick(post)"
             >
               Read More
             </SfButton>
@@ -79,23 +64,23 @@ export default {
       if (url.startsWith('http')) return url;
       return `${process.env.VSF_STRAPI_API_URL || 'http://localhost:1337'}${url}`;
     },
-    navigateToArticle(slug) {
-      this.$router.push(`/blog/${slug}`);
-    },
-    formatDate(dateString) {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
+    handlePostClick(post) {
+      if (post.link) {
+        if (post.link.startsWith('http')) {
+          window.open(post.link, '_blank');
+        } else {
+          this.$router.push(post.link);
+        }
+      }
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.blog-posts-teaser {
+.blog-posts-section {
   padding: var(--spacer-xl) 0;
+  background: var(--c-light);
 }
 
 .container {
@@ -109,7 +94,7 @@ export default {
   margin-bottom: var(--spacer-xl);
 }
 
-.articles-grid {
+.posts-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--spacer-lg);
@@ -123,53 +108,44 @@ export default {
   }
 }
 
-.article-card {
+.post-card {
   background: var(--c-white);
   border-radius: var(--border-radius);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
   
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   }
 }
 
-.article-image {
-  position: relative;
+.post-image {
+  width: 100%;
+  height: 200px;
   overflow: hidden;
 }
 
-.cover-image {
+.post-thumbnail {
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
-  
-  .article-card:hover & {
-    transform: scale(1.05);
-  }
 }
 
-.article-content {
-  padding: var(--spacer-base);
+.post-content {
+  padding: var(--spacer-lg);
 }
 
-.article-title {
+.post-title {
+  font-size: var(--font-size--lg);
+  font-weight: var(--font-weight--semibold);
   margin-bottom: var(--spacer-sm);
-  
-  ::v-deep .sf-heading__title {
-    font-size: var(--font-size--lg);
-    font-weight: var(--font-weight--semibold);
-    line-height: 1.3;
-  }
+  color: var(--c-text);
 }
 
-.article-description {
+.post-excerpt {
   color: var(--c-text-muted);
-  line-height: 1.5;
+  line-height: 1.6;
   margin-bottom: var(--spacer-base);
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -177,18 +153,7 @@ export default {
   overflow: hidden;
 }
 
-.article-meta {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacer-xs);
-  margin-bottom: var(--spacer-base);
-  font-size: var(--font-size--sm);
-  color: var(--c-text-muted);
-}
-
-.read-more-btn {
-  --button-color: var(--c-primary);
-  padding: 0;
-  font-weight: var(--font-weight--medium);
+.post-link {
+  --button-size: var(--spacer-sm) var(--spacer-base);
 }
 </style> 

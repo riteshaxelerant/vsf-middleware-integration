@@ -1,31 +1,37 @@
 <template>
   <div class="image-carousel-section">
     <div class="container">
-      <div v-if="data.images && data.images.length" class="images-grid">
-        <div
-          v-for="(image, index) in data.images"
-          :key="image.id || index"
-          class="image-item"
+      <div v-if="data.images && data.images.length" class="carousel-wrapper">
+        <SfCarousel
+          :settings="carouselSettings"
+          class="image-carousel"
         >
-          <SfImage
-            :src="getStrapiImageUrl(image.url)"
-            :alt="image.alternativeText || `Gallery image ${index + 1}`"
-            :width="400"
-            :height="300"
-            class="gallery-image"
-          />
-        </div>
+          <SfCarouselItem
+            v-for="(image, index) in data.images"
+            :key="index"
+            class="carousel-item"
+          >
+            <SfImage
+              :src="getStrapiImageUrl(image.url)"
+              :alt="image.alternativeText || `Image ${index + 1}`"
+              width="800"
+              height="400"
+              class="carousel-image"
+            />
+          </SfCarouselItem>
+        </SfCarousel>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { SfImage } from '@storefront-ui/vue';
+import { SfCarousel, SfImage } from '@storefront-ui/vue';
 
 export default {
   name: 'StrapiImageCarousel',
   components: {
+    SfCarousel,
     SfImage,
   },
   props: {
@@ -33,6 +39,16 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      carouselSettings: {
+        autoplay: true,
+        interval: 5000,
+        rewind: true,
+        gap: 0,
+      },
+    };
   },
   methods: {
     getStrapiImageUrl(url) {
@@ -45,7 +61,7 @@ export default {
 
 <style lang="scss" scoped>
 .image-carousel-section {
-  padding: var(--spacer-xl) 0;
+  padding: var(--spacer-lg) 0;
 }
 
 .container {
@@ -54,39 +70,31 @@ export default {
   padding: 0 var(--spacer-base);
 }
 
-.images-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--spacer-base);
-  
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.image-item {
+.carousel-wrapper {
+  position: relative;
   border-radius: var(--border-radius);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-carousel {
+  ::v-deep .sf-carousel__wrapper {
+    height: 400px;
   }
 }
 
-.gallery-image {
+.carousel-item {
   width: 100%;
-  height: 250px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
-  
-  .image-item:hover & {
-    transform: scale(1.05);
-  }
 }
 </style> 

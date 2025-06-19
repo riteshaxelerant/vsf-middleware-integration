@@ -2,9 +2,9 @@
   <div class="category-highlight-section">
     <div class="container">
       <SfHeading
-        v-if="data.title"
+        v-if="data.sectionTitle"
         :level="2"
-        :title="data.title"
+        :title="data.sectionTitle"
         class="section-heading"
       />
       
@@ -15,34 +15,20 @@
           class="category-card"
           @click="handleCategoryClick(category)"
         >
-          <div v-if="getCategoryImage(category)" class="category-image">
+          <div class="category-image">
             <SfImage
-              :src="getCategoryImage(category)"
-              :alt="category.title"
-              :width="300"
-              :height="200"
-              class="card-image"
+              v-if="category.image && category.image.url"
+              :src="getStrapiImageUrl(category.image.url)"
+              :alt="category.image.alternativeText || category.name"
+              width="300"
+              height="200"
+              class="category-thumbnail"
             />
           </div>
           
           <div class="category-content">
-            <SfHeading
-              :level="3"
-              :title="category.title"
-              class="category-title"
-            />
-            
-            <p v-if="category.description" class="category-description">
-              {{ category.description }}
-            </p>
-            
-            <SfButton
-              v-if="category.link"
-              class="sf-button--text category-link"
-              @click.stop="handleCategoryClick(category)"
-            >
-              Explore →
-            </SfButton>
+            <h3 class="category-name">{{ category.name }}</h3>
+            <p v-if="category.description" class="category-description">{{ category.description }}</p>
           </div>
         </div>
       </div>
@@ -51,14 +37,13 @@
 </template>
 
 <script>
-import { SfHeading, SfImage, SfButton } from '@storefront-ui/vue';
+import { SfHeading, SfImage } from '@storefront-ui/vue';
 
 export default {
   name: 'StrapiCategoryHighlight',
   components: {
     SfHeading,
     SfImage,
-    SfButton,
   },
   props: {
     data: {
@@ -67,10 +52,6 @@ export default {
     },
   },
   methods: {
-    getCategoryImage(category) {
-      if (!category.image || !category.image.url) return '';
-      return this.getStrapiImageUrl(category.image.url);
-    },
     getStrapiImageUrl(url) {
       if (url.startsWith('http')) return url;
       return `${process.env.VSF_STRAPI_API_URL || 'http://localhost:1337'}${url}`;
@@ -114,7 +95,7 @@ export default {
   }
   
   @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
@@ -122,54 +103,46 @@ export default {
   background: var(--c-white);
   border-radius: var(--border-radius);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
   cursor: pointer;
   
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   }
 }
 
 .category-image {
-  position: relative;
+  width: 100%;
+  height: 150px;
   overflow: hidden;
 }
 
-.card-image {
+.category-thumbnail {
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
-  
-  .category-card:hover & {
-    transform: scale(1.05);
-  }
 }
 
 .category-content {
   padding: var(--spacer-base);
 }
 
-.category-title {
-  margin-bottom: var(--spacer-sm);
-  
-  ::v-deep .sf-heading__title {
-    font-size: var(--font-size--lg);
-    font-weight: var(--font-weight--semibold);
-  }
+.category-name {
+  font-size: var(--font-size--base);
+  font-weight: var(--font-weight--semibold);
+  margin-bottom: var(--spacer-xs);
+  color: var(--c-text);
 }
 
 .category-description {
   color: var(--c-text-muted);
-  line-height: 1.5;
-  margin-bottom: var(--spacer-base);
-}
-
-.category-link {
-  --button-color: var(--c-primary);
-  padding: 0;
-  font-weight: var(--font-weight--medium);
+  font-size: var(--font-size--sm);
+  line-height: 1.4;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style> 

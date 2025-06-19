@@ -23,12 +23,14 @@ export function useStrapi(contentType) {
         throw new Error(`Invalid content type: ${contentType}`);
       }
 
-      const isSingle = params.slug || contentType === 'global';
+      // Detect if this is a single item request based on parameters
+      const isSingle = params.slug || params.email || contentType === 'global';
       const endpoint = isSingle ? endpoints.single : endpoints.collection;
       
       const result = await strapiApiClient[endpoint](params);
 
-      // Strapi returns an array for single items, so we extract the first element.
+      // For single items, GraphQL returns an array, so we extract the first element.
+      // For collections, we keep the array as-is.
       if (isSingle && Array.isArray(result.data) && result.data.length > 0) {
         data.value = result.data[0];
       } else {

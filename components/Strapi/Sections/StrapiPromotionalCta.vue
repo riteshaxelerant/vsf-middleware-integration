@@ -1,25 +1,38 @@
 <template>
   <div class="promotional-cta">
-    <SfCallToAction
-      :title="data.title"
-      :description="data.description"
-      :button-text="data.buttonText"
-      :image="backgroundImage"
-      :image-width="1200"
-      :image-height="400"
-      class="cta-component"
-      @click="handleCtaClick"
-    />
+    <div class="container">
+      <div class="cta-content">
+        <SfHeading
+          v-if="data.title"
+          :level="2"
+          :title="data.title"
+          class="cta-heading"
+        />
+        
+        <p v-if="data.body" class="cta-description">
+          {{ data.body }}
+        </p>
+        
+        <SfButton
+          v-if="data.buttonText && data.buttonUrl"
+          class="cta-button"
+          @click="handleButtonClick"
+        >
+          {{ data.buttonText }}
+        </SfButton>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { SfCallToAction } from '@storefront-ui/vue';
+import { SfHeading, SfButton } from '@storefront-ui/vue';
 
 export default {
   name: 'StrapiPromotionalCta',
   components: {
-    SfCallToAction,
+    SfHeading,
+    SfButton,
   },
   props: {
     data: {
@@ -27,18 +40,8 @@ export default {
       required: true,
     },
   },
-  computed: {
-    backgroundImage() {
-      if (!this.data.backgroundImage || !this.data.backgroundImage.url) return '';
-      return this.getStrapiImageUrl(this.data.backgroundImage.url);
-    },
-  },
   methods: {
-    getStrapiImageUrl(url) {
-      if (url.startsWith('http')) return url;
-      return `${process.env.VSF_STRAPI_API_URL || 'http://localhost:1337'}${url}`;
-    },
-    handleCtaClick() {
+    handleButtonClick() {
       if (this.data.buttonUrl) {
         if (this.data.buttonUrl.startsWith('http')) {
           window.open(this.data.buttonUrl, '_blank');
@@ -53,28 +56,39 @@ export default {
 
 <style lang="scss" scoped>
 .promotional-cta {
-  margin: var(--spacer-xl) 0;
+  padding: var(--spacer-2xl) 0;
+  background: var(--c-primary);
+  color: var(--c-white);
+  text-align: center;
 }
 
-.cta-component {
-  ::v-deep .sf-call-to-action {
-    &__text-container {
-      padding: var(--spacer-xl);
-    }
-    
-    &__title {
-      font-size: var(--font-size--lg);
-      margin-bottom: var(--spacer-base);
-    }
-    
-    &__description {
-      margin-bottom: var(--spacer-lg);
-      line-height: 1.6;
-    }
-    
-    &__button {
-      --button-padding: var(--spacer-sm) var(--spacer-lg);
-    }
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 var(--spacer-base);
+}
+
+.cta-heading {
+  margin-bottom: var(--spacer-lg);
+  
+  ::v-deep .sf-heading__title {
+    color: var(--c-white);
+  }
+}
+
+.cta-description {
+  font-size: var(--font-size--lg);
+  line-height: 1.6;
+  margin-bottom: var(--spacer-xl);
+  opacity: 0.9;
+}
+
+.cta-button {
+  --button-background: var(--c-white);
+  --button-color: var(--c-primary);
+  
+  &:hover {
+    --button-background: var(--c-light);
   }
 }
 </style> 

@@ -17,6 +17,7 @@ import { usePageStore } from '~/stores/page';
 import CATEGORY from '~/modules/catalog/pages/category.vue';
 import CMS_PAGE from '~/pages/Cms.vue';
 import PRODUCT from '~/modules/catalog/pages/product.vue';
+import STRAPI_PAGE from '~/pages/StrapiPage.vue';
 
 export default defineComponent({
   name: 'PageResolver',
@@ -24,6 +25,7 @@ export default defineComponent({
     CATEGORY,
     CMS_PAGE,
     PRODUCT,
+    STRAPI_PAGE,
   },
   middleware: [
     'url-resolver',

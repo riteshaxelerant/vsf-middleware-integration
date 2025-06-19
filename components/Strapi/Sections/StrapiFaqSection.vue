@@ -2,9 +2,9 @@
   <div class="faq-section">
     <div class="container">
       <SfHeading
-        v-if="data.title"
+        v-if="data.sectionTitle"
         :level="2"
-        :title="data.title"
+        :title="data.sectionTitle"
         class="section-heading"
       />
       
@@ -17,9 +17,9 @@
           class="faq-item"
         >
           <SfAccordionItem
-            :header="faq.question"
+            :header="faq.title"
           >
-            <div class="faq-answer" v-html="faq.answer" />
+            <div class="faq-answer" v-html="faq.summary" />
           </SfAccordionItem>
         </SfAccordion>
       </div>
