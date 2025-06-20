@@ -3,6 +3,7 @@
     <div class="container">
       <div v-if="data.images && data.images.length" class="carousel-wrapper">
         <SfCarousel
+          v-if="mounted"
           :settings="carouselSettings"
           class="image-carousel"
         >
@@ -27,6 +28,7 @@
 
 <script>
 import { SfCarousel, SfImage } from '@storefront-ui/vue';
+import { onMounted, ref } from '@nuxtjs/composition-api';
 
 export default {
   name: 'StrapiImageCarousel',
@@ -43,11 +45,22 @@ export default {
   data() {
     return {
       carouselSettings: {
-        autoplay: true,
+        autoplay: false,
         interval: 5000,
         rewind: true,
         gap: 0,
       },
+    };
+  },
+  setup() {
+    const mounted = ref(false);
+
+    onMounted(() => {
+      mounted.value = true;
+    });
+
+    return {
+      mounted,
     };
   },
   methods: {
@@ -78,18 +91,11 @@ export default {
 }
 
 .image-carousel {
+  width: 100%;
+  
   ::v-deep .sf-carousel__wrapper {
     height: 400px;
   }
-}
-
-.carousel-item {
-  width: 100%;
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
 }
 
 .carousel-image {

@@ -21,12 +21,6 @@
         </div>
       </div>
     </SfLoader>
-
-    <!-- Debug info -->
-    <div v-if="page" class="debug-info">
-      <SfHeading :level="3">Debug Info (Page Data)</SfHeading>
-      <pre>{{ page }}</pre>
-    </div>
   </div>
 </template>
 

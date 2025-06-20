@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { marked } from 'marked';
+
 export default {
   name: 'StrapiRichTextBlock',
   props: {
@@ -21,16 +23,15 @@ export default {
     processedContent() {
       if (!this.data.content) return '';
       
-      // Process the content to ensure proper styling and security
-      let content = this.data.content;
-      
-      // Replace Strapi image URLs with full URLs
-      content = content.replace(
-        /src="\/uploads\//g,
-        `src="${process.env.VSF_STRAPI_API_URL || 'http://localhost:1337'}/uploads/`
-      );
-      
-      return content;
+      const renderer = new marked.Renderer();
+      const strapiUrl = process.env.VSF_STRAPI_API_URL || 'http://localhost:1337';
+
+      renderer.image = (href, title, text) => {
+        const src = href.startsWith('http') ? href : `${strapiUrl}${href}`;
+        return `<img src="${src}" alt="${text}" ${title ? `title="${title}"` : ''}>`;
+      };
+
+      return marked(this.data.content, { renderer });
     },
   },
 };

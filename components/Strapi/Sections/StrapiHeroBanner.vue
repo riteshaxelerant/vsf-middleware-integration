@@ -5,7 +5,6 @@
       :title="data.herotitle"
       :subtitle="data.subtitle"
       :button-text="data.buttonText"
-      :background="backgroundImage"
       @click:cta="handleCtaClick"
     />
   </SfHero>
@@ -32,6 +31,7 @@ export default {
     },
     heroStyle() {
       return {
+        '--hero-item-background-image': `url(${this.backgroundImage})`,
         '--hero-item-background-position': 'center center',
         '--hero-item-background-size': 'cover',
       };
@@ -66,6 +66,11 @@ export default {
   ::v-deep .sf-hero-item {
     min-height: 400px;
     
+    .sf-hero-item__title,
+    .sf-hero-item__subtitle {
+      color: var(--c-white);
+    }
+
     @media (min-width: 1024px) {
       min-height: 500px;
     }

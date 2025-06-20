@@ -68,6 +68,12 @@ export default {
   padding: 0 var(--spacer-base);
 }
 
+.cta-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .cta-heading {
   margin-bottom: var(--spacer-lg);
   
