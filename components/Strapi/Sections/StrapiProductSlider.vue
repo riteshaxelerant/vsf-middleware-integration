@@ -25,7 +25,7 @@
             <nuxt-link :to="slide.link">
               <SfImage
                 :src="slide.image.url"
-                :alt="slide.image.alternativeText"
+                :alt="slide.image.alternativeText || slide.name || ''"
                 :width="200"
                 :height="200"
                 class="product-image"

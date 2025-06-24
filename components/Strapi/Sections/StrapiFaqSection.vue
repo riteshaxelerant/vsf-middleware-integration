@@ -8,27 +8,22 @@
         class="section-heading"
       />
       
-      <div v-if="data.faqs && data.faqs.length" class="faq-list">
-        <SfAccordion
+      <SfAccordion v-if="data.faqs && data.faqs.length" v-model="open" :multiple="true" class="faq-list">
+        <SfAccordionItem
           v-for="faq in data.faqs"
           :key="faq.id"
-          :open="false"
-          :show-chevron="true"
-          class="faq-item"
+          :header="faq.title"
         >
-          <SfAccordionItem
-            :header="faq.title"
-          >
-            <div class="faq-answer" v-html="faq.summary" />
-          </SfAccordionItem>
-        </SfAccordion>
-      </div>
+          <div class="faq-answer" v-html="faq.summary" />
+        </SfAccordionItem>
+      </SfAccordion>
     </div>
   </div>
 </template>
 
 <script>
 import { SfAccordion, SfHeading } from '@storefront-ui/vue';
+import { ref } from '@nuxtjs/composition-api';
 
 export default {
   name: 'StrapiFaqSection',
@@ -41,6 +36,10 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  setup() {
+    const open = ref([]);
+    return { open };
   },
 };
 </script>
@@ -62,20 +61,14 @@ export default {
 }
 
 .faq-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacer-sm);
-}
-
-.faq-item {
-  border: 1px solid var(--c-light);
-  border-radius: var(--border-radius);
-  
   ::v-deep .sf-accordion-item {
     &__header {
       padding: var(--spacer-base);
       font-weight: var(--font-weight--semibold);
       background: var(--c-white);
+      border: 1px solid var(--c-light);
+      border-radius: var(--border-radius);
+      margin-bottom: var(--spacer-sm);
       
       &:hover {
         background: var(--c-light);
@@ -84,7 +77,11 @@ export default {
     
     &__content {
       padding: var(--spacer-base);
-      border-top: 1px solid var(--c-light);
+      border: 1px solid var(--c-light);
+      border-top: none;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+      margin-top: calc(-1 * var(--spacer-sm));
+      margin-bottom: var(--spacer-sm);
     }
   }
 }

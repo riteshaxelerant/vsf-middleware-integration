@@ -33,4 +33,30 @@ export type StrapiComposables = {
   categories: () => Promise<ComposableResults<StrapiCategory>>;
   authors: () => Promise<ComposableResults<StrapiAuthor>>;
   global: () => Promise<ComposableResults<StrapiGlobal>>;
-}; 
+};
+
+export interface StrapiImageFormat {
+  ext: string;
+  url: string;
+  hash: string;
+  mime: string;
+  name: string;
+  path: string | null;
+  size: number;
+  width: number;
+  height: number;
+}
+
+export interface StrapiImageFormats {
+  thumbnail: StrapiImageFormat;
+  [key: string]: StrapiImageFormat;
+}
+
+export interface StrapiMeta {
+  pagination: {
+    page: number;
+    pageSize: number;
+    pageCount: number;
+    total: number;
+  };
+} 

@@ -14,19 +14,17 @@
           :key="post.id"
           class="post-card"
         >
-          <div class="post-image">
+          <div class="post-image" @click="handlePostClick(post)" style="cursor: pointer;">
             <SfImage
               v-if="post.image && post.image.url"
               :src="getStrapiImageUrl(post.image.url)"
               :alt="post.image.alternativeText || post.title"
-              width="300"
-              height="200"
               class="post-thumbnail"
             />
           </div>
           
           <div class="post-content">
-            <h3 class="post-title">{{ post.title }}</h3>
+            <h3 class="post-title" @click="handlePostClick(post)" style="cursor: pointer;">{{ post.title }}</h3>
             <p v-if="post.summary" class="post-excerpt">{{ post.summary }}</p>
             
             <SfButton
@@ -69,7 +67,8 @@ export default {
         if (post.link.startsWith('http')) {
           window.open(post.link, '_blank');
         } else {
-          this.$router.push(post.link);
+          const internalLink = post.link.startsWith('/') ? post.link : `/${post.link}`;
+          this.$router.push(`/default${internalLink}`);
         }
       }
     },

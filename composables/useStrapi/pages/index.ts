@@ -26,7 +26,7 @@ export const useStrapiPages = () => {
       const result = await strapiApiClient[endpoint](params);
       
       if (isSingle) {
-        const extractedData = extractPageData(result);
+      const extractedData = extractPageData(result);
         page.value = extractedData as unknown as StrapiPage;
       } else {
         // For collections, the response data is the array itself.
