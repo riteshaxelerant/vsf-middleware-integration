@@ -7,6 +7,65 @@ This repo describes the middleware setup for strapi and composable created in VS
 
 Repository is a starter Alokai application integrated with Magento2.
 
+---
+
+## Strapi CMS Integration
+
+This project features a deep integration with Strapi CMS to manage dynamic content, such as pages and blog articles. The integration is designed to be robust and scalable, leveraging a custom server middleware, a GraphQL-powered API layer, and a structured composable architecture.
+
+### 1. Custom Server Middleware
+
+The core of the integration is a custom server middleware located at `vsf/serverMiddleware/strapi-api.js`. This middleware acts as a proxy between the Vue Storefront frontend and the Strapi backend. Its primary responsibilities are:
+
+-   **Exposing a single API endpoint** (`/api/strapi`) to the frontend for all Strapi-related requests.
+-   **Mapping frontend requests** to the appropriate GraphQL queries.
+-   **Executing GraphQL queries** against the Strapi `/graphql` endpoint.
+-   **Transforming the response** to a consistent format that the frontend composables can easily consume.
+
+This approach provides a clean separation of concerns, keeping complex queries and backend communication on the server side.
+
+### 2. GraphQL API Layer
+
+The middleware dynamically reads GraphQL query files from the `vsf/serverMiddleware/strapi-queries/` directory based on the `endpoint` parameter in the request. This allows for clean and maintainable queries.
+
+The available API endpoints are:
+
+| Description      | Method | URL                                                                                |
+| ---------------- | ------ | ---------------------------------------------------------------------------------- |
+| **Pages**        |        |                                                                                    |
+| Pages List       | `GET`  | `http://localhost:3000/api/strapi/?endpoint=getPages&limit=5`                        |
+| Single Page      | `GET`  | `http://localhost:3000/api/strapi/?endpoint=getPage&slug=trending-in-mens`           |
+| **Blogs**        |        |                                                                                    |
+| Blogs List       | `GET`  | `http://localhost:3000/api/strapi/?endpoint=getArticles&limit=5`                     |
+| Single Blog      | `GET`  | `http://localhost:3000/api/strapi/?endpoint=getArticle&slug=love-the-nature`         |
+| **Categories**   |        |                                                                                    |
+| Categories       | `GET`  | `http://localhost:3000/api/strapi/?endpoint=getCategories`                           |
+| Single Category  | `GET`  | `http://localhost:3000/api/strapi/?endpoint=getCategory&slug=category`               |
+| **Authors**      |        |                                                                                    |
+| Authors          | `GET`  | `http://localhost:3000/api/strapi/?endpoint=getAuthors`                              |
+| Single Author    | `GET`  | `http://localhost:3000/api/strapi/?endpoint=getAuthor&email=johndoe@mailinator.com`  |
+
+### 3. Composable Architecture
+
+The frontend interacts with the Strapi API via a set of structured composables located in `vsf/composables/useStrapi/`. Each content type has its own composable (e.g., `useStrapiPages`, `useStrapiArticles`), which encapsulates the logic for fetching and managing its specific data.
+
+These composables provide a clean, reactive, and reusable way to access Strapi data from any Vue component. For example, `useStrapiArticles` includes functions for searching, paginating, and loading more articles.
+
+### 4. Dynamic Pages and Routes
+
+The Strapi integration powers several key parts of the frontend:
+
+-   **Dynamic Pages:** Generic pages created in Strapi are rendered using the `vsf/pages/StrapiPage.vue` component. This component uses the `useStrapiPages` composable to fetch page data based on the URL slug.
+    -   URL Structure: `http://localhost:3000/default/<page-slug>`
+-   **Blog Listing Page:** A dedicated page at `vsf/pages/blog/index.vue` displays a paginated grid of all blog articles.
+    -   URL: `http://localhost:3000/default/blog`
+-   **Blog Detail Page:** Individual blog posts are rendered on a dynamic route that fetches the specific article data.
+    -   URL Structure: `http://localhost:3000/default/blog/<blog-slug>`
+
+This setup allows content managers to create and edit pages and blog posts in Strapi, with the changes automatically reflected on the Vue Storefront site.
+
+---
+
 ### Requirements:
 - NodeJS >=14 <=16
 - Yarn
