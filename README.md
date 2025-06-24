@@ -22,6 +22,21 @@ The core of the integration is a custom server middleware located at `vsf/server
 -   **Executing GraphQL queries** against the Strapi `/graphql` endpoint.
 -   **Transforming the response** to a consistent format that the frontend composables can easily consume.
 
+This middleware is registered in `nuxt.config.js` under the `serverMiddleware` array, which links the `/api/strapi` path to the handler file:
+
+```javascript
+// nuxt.config.js
+export default {
+  // ...
+  serverMiddleware: [
+    // ...
+    {
+      path: '/api/strapi', handler: '~/serverMiddleware/strapi-api.js'
+    }
+  ]
+}
+```
+
 This approach provides a clean separation of concerns, keeping complex queries and backend communication on the server side.
 
 ### 2. GraphQL API Layer
