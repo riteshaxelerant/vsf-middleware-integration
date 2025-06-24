@@ -79,6 +79,55 @@ The Strapi integration powers several key parts of the frontend:
 
 This setup allows content managers to create and edit pages and blog posts in Strapi, with the changes automatically reflected on the Vue Storefront site.
 
+### 5. Dynamic Page Routing (URL Resolution)
+
+A key feature of this project is its ability to seamlessly serve content from both Magento (for products, categories, and its own CMS pages) and Strapi (for dynamic content pages and blogs). This is achieved through a smart URL resolution strategy that determines the type of content a URL corresponds to before rendering the page.
+
+Here is a step-by-step breakdown of the process:
+
+#### Step 1: The Request
+A user navigates to a URL (e.g., `/some-page`). The request is intercepted by Vue Storefront's routing system before a specific page component is rendered.
+
+#### Step 2: Check Magento First (The Primary Source)
+The `useUrlResolver` composable makes an API call to the main VSF Middleware server, which queries the Magento GraphQL API. It essentially asks Magento, "Do you recognize this URL?"
+
+Magento can respond in several ways:
+-   If the URL is a product, it returns `{ type: 'PRODUCT', ... }`.
+-   If the URL is a category, it returns `{ type: 'CATEGORY', ... }`.
+-   If the URL is a Magento CMS Page, it returns `{ type: 'CMS_PAGE', ... }`.
+
+If a match is found, the system proceeds to render the appropriate component (e.g., `Cms.vue` for a Magento CMS page).
+
+#### Step 3: Fallback to Strapi (The Content Source)
+If Magento returns a "404 Not Found" error, the application does not give up. Instead, it triggers a fallback mechanism. It now asks Strapi, "Do you recognize this URL?"
+
+An API call is made to our custom server middleware (`/api/strapi`) with the page's slug.
+
+#### Step 4: Render the Correct Component
+Based on the results of the resolution process, the application makes a final decision:
+-   If **Magento** recognized the URL as a CMS page, **`Cms.vue`** is rendered.
+-   If **Strapi** recognized the URL, **`StrapiPage.vue`** is rendered.
+-   If **neither system** recognizes the URL, a standard **404 Not Found** page is displayed.
+
+This entire process is invisible to the user, providing a unified experience where content can be managed in the system best suited for the job.
+
+#### Visual Flowchart
+
+The following diagram illustrates the decision-making process:
+
+```mermaid
+graph TD
+    A[User Request: /some-url] --> B(VSF URL Resolver);
+    B --> C{Check Magento API};
+    C --> D[Found: Product<br/>Render Product Page];
+    C --> E[Found: Category<br/>Render Category Page];
+    C --> F[Found: CMS_PAGE<br/>Render Cms.vue];
+    C --> G{Not Found by Magento};
+    G --> H{Check Strapi API};
+    H --> I[Found: Strapi Page<br/>Render StrapiPage.vue];
+    H --> J[Not Found by Strapi<br/>Render 404 Page];
+```
+
 ---
 
 ### Requirements:
